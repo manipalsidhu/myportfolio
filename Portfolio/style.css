@@ -1,4 +1,13 @@
-﻿*,
+/*
+Theme Name: Replace with your Theme's name.
+Theme URI: www.maplewebs.ca
+Description: A brief description.
+Version: 1.0
+Author: Manipal Sidhu
+Author URI: www.maplewebs.ca
+*/
+
+*,
 *::before,
 *::after {
     box-sizing: border-box;
@@ -12,7 +21,7 @@
     --fw-reg: 300;
     --fw-bold: 900;
     
-    --clr-light: white;
+    --clr-light: #fff;
     --clr-dark: #303030;
     --clr-accent: #16e0bd;
     
@@ -49,7 +58,7 @@ body {
 }
 
 section {
-    padding: 4em 2em;
+    padding: 5em 2em;
 }
 
 img {
@@ -200,6 +209,11 @@ header {
     opacity: 0;
 }
 
+
+
+
+
+
 .hamburger {
     display: block;
     position: relative;
@@ -270,10 +284,15 @@ header {
     }
 }
 
+
+
+
+
 .my-services {
     background-color: var(--clr-dark);
     background-image: url(../img/services-bg.jpg);
     background-size: cover;
+    /* background-blend-mode: multiply; */
     color: var(--clr-light);
     text-align: center;
 }
@@ -366,7 +385,6 @@ header {
 
 .portfolio {
     display: grid;
-    justify-content: space-between;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
@@ -452,6 +470,8 @@ header {
 }
 
 
+
+
 .skill-me {
     max-width: 1000px;
     margin: auto;
@@ -461,7 +481,6 @@ header {
 
 
 .skills {
-    font-weight: bold;
     width: 160px;
     height: 160px;
     position: relative;
@@ -541,10 +560,6 @@ svg {
 
 @keyframes num {
     100% {
-        stroke-dashoffset: 176;
+        stroke-dashoffset: 242;
     }
-}
-li{
-    text-align: left;
-
 }

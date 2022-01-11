@@ -55,11 +55,11 @@ setInterval(() => {
 let numnumber = document.getElementById("number");
 let numcounter = 0;
 setInterval(() => {
-    if (numcounter == 45) {
+    if (numcounter == 60) {
         clearInterval();
     }
     else {
         numcounter += 1;
         numnumber.innerHTML = numcounter + "%";
     }
-}, 45);
+}, 34);
