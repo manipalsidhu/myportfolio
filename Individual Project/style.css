@@ -1,0 +1,44 @@
+﻿h1 {
+	background-color: #211811;
+	color: #FFFFFF;
+	}
+#copyright {
+	background-color: #211811;
+	color: #FFFFFF;
+}
+h2 {
+	background-color: #211811;
+	color: #FFFFFF;
+}
+#cf {
+	background-color: #211811;
+	color: #FFFFFF;
+}
+#as {
+	color: #FFFFFF;
+	background-color: #211811;
+}
+#mission {
+	color: #FFFFFF;
+	background-color: #211811;
+}
+#ms {
+	color: #FFFFFF;
+	background-color: #211811;
+}
+h3 {
+	color: #FFFFFF;
+	background-color: #211811;
+}
+#contactpic {
+	background-color: #211811;
+}
+.fieldLabel {
+	text-align: right;
+}
+#allPage {
+	width: 1024px;
+	margin-right: auto;
+	margin-left: auto;
+	border-style: none;
+}
