@@ -1,0 +1,85 @@
+﻿#allPage {
+	margin: 40px auto 40px auto;
+	border: 10px solid #9CA1D0;
+	border-radius: 25px;
+	padding: 20px 20px 10px 20px;
+	box-shadow: 20px 20px 20px #5B8196;
+	width: 1024px;
+	opacity: 0.80;
+	background-repeat: repeat;
+	text-align: center;
+	background-color: #807A9C;
+}
+body {
+	font-family: sans-serif;
+	background-image: url('Images/background.jpg');
+	text-align: center;
+	background-repeat: no-repeat;
+}
+h1 {
+	font-family: Algerian;
+	color: #E8E0D1;
+	font-size: 60px;
+	text-align: center;
+	font-weight: bold;
+}
+label {
+	width: 400px;
+	float: none;
+	text-align: center;
+	font-weight: bold;
+	font-size: 24px;
+	font-family: Algerian;
+	color: #FFF3E0;
+}
+#button {
+	border: medium solid #8C99C4;
+	border-radius: 15px;
+	background-image: none;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+}
+#button:hover {
+	background-image: none;
+	color: #000000;
+	background-color: #A4AA36;
+}
+
+input {
+	text-align: center;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+#output {
+	margin: auto;
+	text-align: center;
+	table-layout: inherit;
+	border-spacing: 3px;
+}
+#copyright {
+	font-size: small;
+	font-family: "Times New Roman", Times, serif;
+	text-decoration: none;
+	text-align: center;
+	color: #000000;
+	background-color: #FAFBF5;
+	background-repeat: repeat;
+}
+table {
+	border-collapse: collapse;
+	margin: auto;
+	height: 150px;
+	table-layout: fixed;
+	width: 100%;
+}
+th, td {
+	text-align: center;
+	padding: 3px;
+	border: 3px solid #8893BE;
+	word-wrap: break-word;
+	background-color: #FFFFFF;
+}
+
