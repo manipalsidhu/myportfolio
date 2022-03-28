@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<!--Created by: Manipal Singh Sidhu - Created on: August 13, 2021-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weather Information</title>
+<link rel="icon" href="Images/icon.png">
+<link href="Style.css" rel="stylesheet">
+</head>
+<body>
+<div id="main">
+<h1>Weather Information</h1>
+<fieldset id="inner">
+<legend id="legends"><h3>Check Weather by City Name</h3></legend>
+<p>Enter Any City Name:</p>
+<input type=text id="cityName" placeholder="Enter City Name">
+<button id="forecast">Check Weather</button>
+<div id="forecastInfo"></div><br>
+</fieldset>
+<fieldset id="inner">
+<legend id="legends"><h3>Current Location Weather</h3></legend>
+<i><h1 id="temperature"></h1></i>
+<i><h2 id="description"></h2></i>
+<p id="location"></p>
+</fieldset>
+<fieldset id="inner">
+<legend id="legends"><h3>Your Current Location</h3></legend>
+<div id="map">Please Allow Access To Show Your location</div>
+</fieldset>
+<br>
+</div>
+<script src="Script.js"></script>
+<br>
+<footer>
+<p id="copyright">&copy;&nbsp;Manipal Singh Sidhu - COMP125 - Summer 2021 - Assignment 6. All rights reserved.</p>
+</footer>
+</body>
+</html>
