@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--Created by: Manipal Singh Sidhu - Created on: June 21, 2021-->
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="Bugatti Photo Gallery" name="description">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>DOM - Assignment 3</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="modernizer.js"></script>
+</head>
+<body>
+    <div>
+        <header>
+            <h1>Bugatti Photo Gallery</h1>
+        </header>
+
+        <article>
+            <div id="leftarrow">
+                <p>&lt;</p>
+            </div>
+            <figure id="fig2">
+                <img width="360" height="202" />
+            </figure>
+            <figure id="fig3">
+                <img width="480" height="270" />
+            </figure>
+            <figure id="fig4">
+                <img width="360" height="202" />
+            </figure>
+            <div id="rightarrow">
+                <p>&gt;</p>
+            </div>
+            <div id="fiveButton">
+                <p>Show more images</p>
+            </div>
+        </article>
+
+        <footer>
+            <p style="color: white;">Favotires</p>
+            <br>
+            <table>
+                <tr>
+                    <td style="padding: 5px;">
+                        <img name="favorites" height="100" onclick="showRemoveBtn(0)" />
+                        <a href="#" onclick="removeFavorite(0)" id="link0" style="display: none;">Remove</a>
+                    </td>
+                    <td style="padding: 5px;">
+                        <img name="favorites" height="100" onclick="showRemoveBtn(1)" />
+                        <a href="#" onclick="removeFavorite(1)" id="link1" style="display: none;">Remove</a>
+                    </td>
+                    <td style="padding: 5px;">
+                        <img name="favorites" height="100" onclick="showRemoveBtn(2)" />
+                        <a href="#" onclick="removeFavorite(2)" id="link2" style="display: none;">Remove</a>
+                    </td>
+                    <td style="padding: 5px;">
+                        <img name="favorites" height="100" onclick="showRemoveBtn(3)" />
+                        <a href="#" onclick="removeFavorite(3)" id="link3" style="display: none;">Remove</a>
+                    </td>
+                    <td style="padding: 5px;">
+                        <img name="favorites" height="100" onclick="showRemoveBtn(4)" />
+                        <a href="#" onclick="removeFavorite(4)" id="link4" style="display: none;">Remove</a>
+                    </td>
+                </tr>
+            </table>
+            <p id="copyright">&copy;&nbsp;Manipal Singh Sidhu - COMP125 - Summer 2021 - Assignment 3. All right reserved.</p>
+        </footer>
+    </div>
+
+    <script src="assignment3.js"></script>
+</body>
+</html>
