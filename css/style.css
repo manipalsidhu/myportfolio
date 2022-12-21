@@ -523,25 +523,25 @@ svg {
 
 @keyframes html {
     100%{
-        stroke-dashoffset: 44;
+        stroke-dashoffset: 33;
     }
 }
 
 @keyframes css {
     100% {
-        stroke-dashoffset: 88;
+        stroke-dashoffset: 44;
     }
 }
 
 @keyframes js {
     100% {
-        stroke-dashoffset: 154;
+        stroke-dashoffset: 88;
     }
 }
 
 @keyframes num {
     100% {
-        stroke-dashoffset: 176;
+        stroke-dashoffset: 88;
     }
 }
 li{
