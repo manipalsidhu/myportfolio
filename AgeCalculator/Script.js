@@ -1,90 +1,81 @@
-const months = [31,28,31,30,31,30,31,31,30,31,30,31];
+const months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-function ageCalculate(){
-    let today = new Date();
-    let inputDate = new Date(document.getElementById("date-input").value);
-    let birthMonth,birthDate,birthYear;
+function calculateAge() {
+    let inputDateTime = new Date(document.getElementById("datetime-input").value);
+
     let birthDetails = {
+        date: inputDateTime.getDate(),
+        month: inputDateTime.getMonth() + 1,
+        year: inputDateTime.getFullYear()
+    };
 
-        date:inputDate.getDate()+1,
-        month: inputDate.getMonth()+1,
-        year:inputDate.getFullYear()
-    }
+    let today = new Date();
     let currentYear = today.getFullYear();
-    let currentMonth = today.getMonth()+1;
+    let currentMonth = today.getMonth() + 1;
     let currentDate = today.getDate();
-
-    // Set the date we're counting from
-    var inputTime = new Date("Jun 1, 2021 00:00:00").getTime();
-
-    // Update the age every 1 second
-    var x = setInterval(function () {
-
-        // Get today's date and time
-        let now = new Date().getTime();
-
-        // Find the distance between now and inputTime
-        let distance = now - inputTime;
-
-        // Time calculations for hours, minutes and seconds  
-        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // Display the result in the element
-        document.getElementById("hours").innerHTML = hours;
-        document.getElementById("minutes").innerHTML = minutes;
-        document.getElementById("seconds").innerHTML = seconds;
-    }, 1000);
 
     leapChecker(currentYear);
 
-    if(
+    if (
         birthDetails.year > currentYear ||
-        ( birthDetails.month > currentMonth && birthDetails.year == currentYear) || 
+        (birthDetails.month > currentMonth && birthDetails.year == currentYear) ||
         (birthDetails.date > currentDate && birthDetails.month == currentMonth && birthDetails.year == currentYear)
-    ){
+    ) {
         alert("Not Born Yet");
-        displayResult("-","-","-");
+        displayResult("-", "-", "-");
         return;
     }
 
-    birthYear = currentYear - birthDetails.year;
+    let birthYear = currentYear - birthDetails.year;
 
-    if(currentMonth >= birthDetails.month){
-        birthMonth = currentMonth - birthDetails.month;
-    }
-    else{
+    if (currentMonth >= birthDetails.month) {
+        var birthMonth = currentMonth - birthDetails.month;
+    } else {
         birthYear--;
         birthMonth = 12 + currentMonth - birthDetails.month;
     }
 
-    if(currentDate >= birthDetails.date){
-        birthDate = currentDate - birthDetails.date;
-    }
-    else{
+    if (currentDate >= birthDetails.date) {
+        var birthDate = currentDate - birthDetails.date;
+    } else {
         birthMonth--;
-        let days = months[currentMonth - 2];
-        birthDate = days + currentDate - birthDetails.date;
-        if(birthMonth < 0){
+        let daysInPrevMonth = months[(currentMonth + 10) % 12];
+        birthDate = daysInPrevMonth + currentDate - birthDetails.date;
+        if (birthMonth < 0) {
             birthMonth = 11;
             birthYear--;
         }
     }
-    displayResult(birthDate,birthMonth,birthYear);
+    displayResult(birthDate, birthMonth, birthYear);
+
+    // Set the date we're counting from
+    let inputTime = inputDateTime.getTime();
+
+    // Update the age every 1 second
+    var x = setInterval(function () {
+        let now = new Date().getTime();
+        let distance = now - inputTime;
+
+        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("hours").innerHTML = hours;
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+    }, 1000);
 }
 
-function displayResult(bDate, bMonth, bYear){
+function displayResult(bDate, bMonth, bYear) {
     document.getElementById("years").textContent = bYear;
     document.getElementById("months").textContent = bMonth;
     document.getElementById("days").textContent = bDate;
 }
 
-function leapChecker(year){
-    if(year % 4 == 0 || (year % 100 == 0 && year % 400 == 0)){
+function leapChecker(year) {
+    if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
         months[1] = 29;
-    }
-    else{
+    } else {
         months[1] = 28;
     }
 }
