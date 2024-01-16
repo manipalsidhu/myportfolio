@@ -1,6 +1,7 @@
-﻿<!DOCTYPE html>
-<!--Created by: Manipal Sidhu, Created on: June 26, 2021-->
+<!DOCTYPE html>
+<!-- Created by: Manipal Sidhu, Created on: June 26, 2021 -->
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,70 +11,46 @@
     <link rel="stylesheet" href="Style.css" />
     <title>Age Calculator - In Days</title>
 </head>
+
 <body>
     <div class="container">
-    <div class="inputs-wrapper">
-    <h1 id="heading">Calculate Your Age</h1>
-    </div>
         <div class="inputs-wrapper">
-            <input type="date" id="date-input">
-            <button onclick="ageCalculate()">Calculate</button>
+            <h1 id="heading">Calculate Your Age</h1>
+        </div>
+        <div class="inputs-wrapper">
+            <input type="datetime-local" id="datetime-input">
+            <button onclick="calculateAge()">Calculate</button>
         </div>
         <div class="outputs-wrapper">
             <div>
-                <span id="years">
-                    -
-                </span>
-                <p>
-                    Years
-                </p>
+                <span id="years">-</span>
+                <p>Years</p>
             </div>
             <div>
-                <span id="months">
-                    -
-                </span>
-                <p>
-                    Months
-                </p>
+                <span id="months">-</span>
+                <p>Months</p>
             </div>
             <div>
-                <span id="days">
-                    -
-                </span>
-                <p>
-                    Days
-                </p>
+                <span id="days">-</span>
+                <p>Days</p>
             </div>
         </div>
         <br>
         <div class="outputs-wrapper">
             <div>
-                <span id="hours">
-                    -
-                </span>
-                <p>
-                    Hours
-                </p>
+                <span id="hours">-</span>
+                <p>Hours</p>
             </div>
             <div>
-                <span id="minutes">
-                    -
-                </span>
-                <p>
-                    Minutes
-                </p>
+                <span id="minutes">-</span>
+                <p>Minutes</p>
             </div>
             <div>
-                <span id="seconds">
-                    -
-                </span>
-                <p>
-                    Seconds
-                </p>
+                <span id="seconds">-</span>
+                <p>Seconds</p>
             </div>
         </div>
-
-    </div>    
+    </div>
     <script src="Script.js"></script>
 </body>
 
