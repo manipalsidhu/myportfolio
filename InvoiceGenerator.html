@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppu BKL Invoice Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Uppi BKL Invoice Generator</h2>
+    <div class="form-group">
+        <label for="invoiceNumber">Invoice Number</label>
+        <input type="number" id="invoiceNumber" placeholder="Enter invoice number">
+    </div>
+    <div class="form-group">
+        <label for="date1">Service Date 1 (Week 1)</label>
+        <input type="date" id="date1">
+    </div>
+    <div class="form-group">
+        <label for="date2">Service Date 2 (Week 1)</label>
+        <input type="date" id="date2">
+    </div>
+    <div class="form-group">
+        <label for="hours1">Total Hours (Week 1)</label>
+        <input type="number" id="hours1" placeholder="Enter total hours">
+    </div>
+    <div class="form-group">
+        <label for="date3">Service Date 1 (Week 2)</label>
+        <input type="date" id="date3">
+    </div>
+    <div class="form-group">
+        <label for="date4">Service Date 2 (Week 2)</label>
+        <input type="date" id="date4">
+    </div>
+    <div class="form-group">
+        <label for="hours2">Total Hours (Week 2)</label>
+        <input type="number" id="hours2" placeholder="Enter total hours">
+    </div>
+    <button onclick="generateInvoice()">Generate Invoice</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<script>
+    const { jsPDF } = window.jspdf;
+
+    function formatDate(date) {
+        const options = { year: 'numeric', month: 'long', day: '2-digit' };
+        return new Date(date).toLocaleDateString('en-US', options);
+    }
+
+    function generateInvoice() {
+        const invoiceNumber = document.getElementById('invoiceNumber').value;
+        const date1 = document.getElementById('date1').value;
+        const date2 = document.getElementById('date2').value;
+        const hours1 = parseFloat(document.getElementById('hours1').value);
+        const date3 = document.getElementById('date3').value;
+        const date4 = document.getElementById('date4').value;
+        const hours2 = parseFloat(document.getElementById('hours2').value);
+
+        const ratePerHour = 31;
+        const amount1 = hours1 * ratePerHour;
+        const amount2 = hours2 * ratePerHour;
+        const subtotal = amount1 + amount2;
+        const hst = subtotal * 0.13;
+        const total = subtotal + hst;
+
+        const currentDate = formatDate(new Date());
+
+        const doc = new jsPDF();
+
+        // Right Aligned
+        doc.setFontSize(24);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Invoice #${invoiceNumber}`, 200, 20, { align: 'right' });
+
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Invoice Date: ${currentDate}`, 200, 30, { align: 'right' });
+
+        // Left Aligned
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.text("14893786 CANADA INC.", 20, 20);
+        doc.setFont('helvetica', 'normal');
+        doc.text("3155 MALLBRIDGE CRES", 20, 25);
+        doc.text("MISSISSAUGA, ON L4T2C5", 20, 30);
+        doc.text("+1(647) 501-5372", 20, 35);
+
+        doc.setFont('helvetica', 'bold');
+        doc.text("Bill To:", 20, 45);
+        doc.setFont('helvetica', 'normal');
+        doc.text("Trinity Aerospace Corp.", 20, 50);
+
+        // Table
+        doc.autoTable({
+            startY: 60,
+            head: [
+                [{ content: 'DESCRIPTION', styles: { halign: 'left' } },
+                { content: 'AMOUNT', styles: { halign: 'right' } }]
+            ],
+            body: [
+                [`SERVICES PROVIDED - ${date1} - ${date2}`, `$ ${amount1.toFixed(2)}`],
+                [`SERVICES PROVIDED - ${date3} - ${date4}`, `$ ${amount2.toFixed(2)}`],
+                [`$31.00 @ ${hours1 + hours2} hours`, ``],
+                ['HST - @13%', `$ ${hst.toFixed(2)}`],
+                ['Total', `$ ${total.toFixed(2)}`]
+            ],
+            headStyles: { fillColor: [232, 248, 245] },
+            styles: { textColor: [0, 0, 0], lineWidth: 0.3, lineColor: [173, 216, 230] },
+            columnStyles: {
+                0: { cellWidth: 130, halign: 'left' },  // DESCRIPTION column left-aligned
+                1: { cellWidth: 60, halign: 'right' }   // AMOUNT column right-aligned
+            }
+        });
+
+        // Centered message
+        doc.setFont('helvetica', 'bold');
+        doc.text("THANK YOU FOR YOUR BUSINESS!", 105, doc.autoTable.previous.finalY + 20, { align: 'center' });
+
+        doc.save(`Invoice #${invoiceNumber}.pdf`);
+    }
+</script>
+
+</body>
+</html>
