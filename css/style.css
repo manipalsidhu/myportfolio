@@ -574,7 +574,7 @@ li{
 }
 
 /* Ensure all images in the portfolio are the same size */
-.portfolio__img {
+.certificate__img {
     width: 100%;
     height: auto;
     object-fit: contain; /* Ensure images fit within their container */
