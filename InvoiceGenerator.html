@@ -101,7 +101,7 @@
         const date4 = document.getElementById('date4').value;
         const hours2 = parseFloat(document.getElementById('hours2').value);
 
-        const ratePerHour = 31;
+        const ratePerHour = 32.5;
         const amount1 = hours1 * ratePerHour;
         const amount2 = hours2 * ratePerHour;
         const subtotal = amount1 + amount2;
@@ -145,7 +145,7 @@
             body: [
                 [`SERVICES PROVIDED - ${date1} - ${date2}`, `$ ${amount1.toFixed(2)}`],
                 [`SERVICES PROVIDED - ${date3} - ${date4}`, `$ ${amount2.toFixed(2)}`],
-                [`$31.00 @ ${hours1 + hours2} hours`, ``],
+                [`$32.50 @ ${hours1 + hours2} hours`, ``],
                 ['HST - @13%', `$ ${hst.toFixed(2)}`],
                 ['Total', `$ ${total.toFixed(2)}`]
             ],
