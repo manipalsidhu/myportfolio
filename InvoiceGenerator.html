@@ -51,10 +51,20 @@
 
 <div class="container">
     <h2>Uppi BKL Invoice Generator</h2>
+
+    <div class="form-group">
+        <label for="company">Select Company</label>
+        <select id="company" onchange="toggleWeek2Fields()">
+            <option value="Trinity Aerospace Corp.">Trinity Aerospace Corp.</option>
+            <option value="Programmable Control Systems Ltd.">Programmable Control Systems Ltd.</option>
+        </select>
+    </div>
+
     <div class="form-group">
         <label for="invoiceNumber">Invoice Number</label>
         <input type="number" id="invoiceNumber" placeholder="Enter invoice number">
     </div>
+
     <div class="form-group">
         <label for="date1">Service Date 1 (Week 1)</label>
         <input type="date" id="date1">
@@ -67,18 +77,23 @@
         <label for="hours1">Total Hours (Week 1)</label>
         <input type="number" id="hours1" placeholder="Enter total hours">
     </div>
-    <div class="form-group">
-        <label for="date3">Service Date 1 (Week 2)</label>
-        <input type="date" id="date3">
+
+    <!-- Week 2 Fields -->
+    <div id="week2Fields">
+        <div class="form-group">
+            <label for="date3">Service Date 1 (Week 2)</label>
+            <input type="date" id="date3">
+        </div>
+        <div class="form-group">
+            <label for="date4">Service Date 2 (Week 2)</label>
+            <input type="date" id="date4">
+        </div>
+        <div class="form-group">
+            <label for="hours2">Total Hours (Week 2)</label>
+            <input type="number" id="hours2" placeholder="Enter total hours">
+        </div>
     </div>
-    <div class="form-group">
-        <label for="date4">Service Date 2 (Week 2)</label>
-        <input type="date" id="date4">
-    </div>
-    <div class="form-group">
-        <label for="hours2">Total Hours (Week 2)</label>
-        <input type="number" id="hours2" placeholder="Enter total hours">
-    </div>
+
     <button onclick="generateInvoice()">Generate Invoice</button>
 </div>
 
@@ -92,16 +107,30 @@
         return new Date(date).toLocaleDateString('en-US', options);
     }
 
+    // Hide/Show Week 2 fields
+    function toggleWeek2Fields() {
+        const company = document.getElementById('company').value;
+        const week2 = document.getElementById('week2Fields');
+        week2.style.display = company === "Programmable Control Systems Ltd." ? "none" : "block";
+    }
+
     function generateInvoice() {
+        const company = document.getElementById('company').value;
         const invoiceNumber = document.getElementById('invoiceNumber').value;
         const date1 = document.getElementById('date1').value;
         const date2 = document.getElementById('date2').value;
-        const hours1 = parseFloat(document.getElementById('hours1').value);
-        const date3 = document.getElementById('date3').value;
-        const date4 = document.getElementById('date4').value;
-        const hours2 = parseFloat(document.getElementById('hours2').value);
+        const hours1 = parseFloat(document.getElementById('hours1').value) || 0;
 
-        const ratePerHour = 32.5;
+        let date3 = "", date4 = "", hours2 = 0;
+        if (company !== "Programmable Control Systems Ltd.") {
+            date3 = document.getElementById('date3').value;
+            date4 = document.getElementById('date4').value;
+            hours2 = parseFloat(document.getElementById('hours2').value) || 0;
+        }
+
+        // Different hourly rate per company
+        const ratePerHour = company === "Programmable Control Systems Ltd." ? 35 : 32.5;
+
         const amount1 = hours1 * ratePerHour;
         const amount2 = hours2 * ratePerHour;
         const subtotal = amount1 + amount2;
@@ -133,7 +162,20 @@
         doc.setFont('helvetica', 'bold');
         doc.text("Bill To:", 20, 45);
         doc.setFont('helvetica', 'normal');
-        doc.text("Trinity Aerospace Corp.", 20, 50);
+        doc.text(company, 20, 50);
+
+        // Table Body
+        const tableBody = [
+            [`SERVICES PROVIDED - ${date1} - ${date2}`, `$ ${amount1.toFixed(2)}`],
+            [`$${ratePerHour.toFixed(2)} @ ${hours1 + hours2} hours`, ``],
+            ['HST - @13%', `$ ${hst.toFixed(2)}`],
+            ['Total', `$ ${total.toFixed(2)}`]
+        ];
+
+        // Add Week 2 line only for Trinity Aerospace
+        if (company === "Trinity Aerospace Corp.") {
+            tableBody.splice(1, 0, [`SERVICES PROVIDED - ${date3} - ${date4}`, `$ ${amount2.toFixed(2)}`]);
+        }
 
         // Table
         doc.autoTable({
@@ -142,18 +184,12 @@
                 [{ content: 'DESCRIPTION', styles: { halign: 'left' } },
                 { content: 'AMOUNT', styles: { halign: 'right' } }]
             ],
-            body: [
-                [`SERVICES PROVIDED - ${date1} - ${date2}`, `$ ${amount1.toFixed(2)}`],
-                [`SERVICES PROVIDED - ${date3} - ${date4}`, `$ ${amount2.toFixed(2)}`],
-                [`$32.50 @ ${hours1 + hours2} hours`, ``],
-                ['HST - @13%', `$ ${hst.toFixed(2)}`],
-                ['Total', `$ ${total.toFixed(2)}`]
-            ],
+            body: tableBody,
             headStyles: { fillColor: [232, 248, 245] },
             styles: { textColor: [0, 0, 0], lineWidth: 0.3, lineColor: [173, 216, 230] },
             columnStyles: {
-                0: { cellWidth: 130, halign: 'left' },  // DESCRIPTION column left-aligned
-                1: { cellWidth: 60, halign: 'right' }   // AMOUNT column right-aligned
+                0: { cellWidth: 130, halign: 'left' },
+                1: { cellWidth: 60, halign: 'right' }
             }
         });
 
@@ -163,6 +199,9 @@
 
         doc.save(`Invoice #${invoiceNumber}.pdf`);
     }
+
+    // Initialize correct display on load
+    toggleWeek2Fields();
 </script>
 
 </body>
