@@ -155,14 +155,22 @@
         doc.setFont('helvetica', 'bold');
         doc.text("14893786 CANADA INC.", 20, 20);
         doc.setFont('helvetica', 'normal');
-        doc.text("38 Mount Pleasant Dr", 20, 25);
-        doc.text("Brampton, ON L6Z 1K2", 20, 30);
-        doc.text("+1(647) 501-5372", 20, 35);
+
+        // ✅ Add HST line only for Programmable Control Systems Ltd.
+        let nextLineY = 25;
+        if (company === "Programmable Control Systems Ltd.") {
+            doc.text("HST #: 762103216", 20, nextLineY);
+            nextLineY += 5;
+        }
+
+        doc.text("38 Mount Pleasant Dr", 20, nextLineY);
+        doc.text("Brampton, ON L6Z 1K2", 20, nextLineY + 5);
+        doc.text("+1(647) 501-5372", 20, nextLineY + 10);
 
         doc.setFont('helvetica', 'bold');
-        doc.text("Bill To:", 20, 45);
+        doc.text("Bill To:", 20, nextLineY + 20);
         doc.setFont('helvetica', 'normal');
-        doc.text(company, 20, 50);
+        doc.text(company, 20, nextLineY + 25);
 
         // Table Body
         const tableBody = [
@@ -179,7 +187,7 @@
 
         // Table
         doc.autoTable({
-            startY: 60,
+            startY: nextLineY + 35,
             head: [
                 [{ content: 'DESCRIPTION', styles: { halign: 'left' } },
                 { content: 'AMOUNT', styles: { halign: 'right' } }]
@@ -206,4 +214,3 @@
 
 </body>
 </html>
-
