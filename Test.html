@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Monthly Invoice Generator</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+input, button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+button {
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #0056b3;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Monthly Invoice Generator</h2>
+
+    <div class="form-group">
+        <label>Invoice Number</label>
+        <input type="number" id="invoiceNumber">
+    </div>
+
+    <div class="form-group">
+        <label>Start Date</label>
+        <input type="date" id="startDate">
+    </div>
+
+    <div class="form-group">
+        <label>End Date</label>
+        <input type="date" id="endDate">
+    </div>
+
+    <!-- NEW: Holiday checkbox -->
+    <div class="form-group">
+        <label>
+            <input type="checkbox" id="hasHoliday">
+            Exclude Stat Holiday(s)
+        </label>
+    </div>
+
+    <!-- NEW: Holiday date container -->
+    <div id="holidayContainer" style="display:none;">
+        <div class="form-group">
+            <label>Select Holiday Date</label>
+            <input type="date" class="holidayDate">
+        </div>
+        <button type="button" onclick="addHoliday()">+ Add Another Holiday</button>
+    </div>
+
+    <br><br>
+
+    <button onclick="generateInvoice()">Generate Invoice</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+const { jsPDF } = window.jspdf;
+
+function getLocalDate(dateString) {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day);
+}
+
+function formatDate(date) {
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit'
+    });
+}
+
+// NEW: Show/hide holiday section
+document.getElementById('hasHoliday').addEventListener('change', function () {
+    const container = document.getElementById('holidayContainer');
+    container.style.display = this.checked ? 'block' : 'none';
+});
+
+// NEW: Add multiple holiday inputs
+function addHoliday() {
+    const container = document.getElementById('holidayContainer');
+
+    const div = document.createElement('div');
+    div.className = 'form-group';
+
+    div.innerHTML = `
+        <input type="date" class="holidayDate">
+    `;
+
+    container.insertBefore(div, container.lastElementChild);
+}
+
+// UPDATED: count weekdays with exclusions
+function countWeekdays(start, end, excludedDates = []) {
+    let count = 0;
+    let current = new Date(start);
+
+    current.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+
+    while (current <= end) {
+        const day = current.getDay();
+        const currentStr = current.toISOString().split('T')[0];
+
+        const isWeekend = (day === 0 || day === 6);
+        const isExcluded = excludedDates.includes(currentStr);
+
+        if (!isWeekend && !isExcluded) {
+            count++;
+        }
+
+        current.setDate(current.getDate() + 1);
+    }
+
+    return count;
+}
+
+function generateInvoice() {
+    const invoiceNumber = document.getElementById('invoiceNumber').value;
+    const startDate = getLocalDate(document.getElementById('startDate').value);
+    const endDate = getLocalDate(document.getElementById('endDate').value);
+
+    // NEW: collect excluded dates
+    let excludedDates = [];
+
+    if (document.getElementById('hasHoliday').checked) {
+        const holidayInputs = document.querySelectorAll('.holidayDate');
+
+        holidayInputs.forEach(input => {
+            if (input.value) {
+                excludedDates.push(input.value);
+            }
+        });
+    }
+
+    const weekdays = countWeekdays(startDate, endDate, excludedDates);
+    const hours = weekdays * 7.5;
+
+    const rate = 60;
+    const subtotal = hours * rate;
+    const hst = subtotal * 0.13;
+    const total = subtotal + hst;
+
+    const doc = new jsPDF();
+
+    // Right aligned invoice header
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Invoice #${invoiceNumber}`, 200, 20, { align: 'right' });
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Invoice Date: ${formatDate(new Date())}`, 200, 30, { align: 'right' });
+
+    // Left aligned business info
+    doc.setFont('helvetica', 'bold');
+    doc.text("17719779 Canada Inc.", 20, 20);
+    doc.setFont('helvetica', 'normal');
+    doc.text("HST #: 736670431", 20, 25);
+    doc.text("295 Shuter St., Apt# 1416", 20, 30);
+    doc.text("Toronto, ON M5A 1W6", 20, 35);
+    doc.text("+1(905) 872-0033", 20, 40);
+
+    // Bill To
+    doc.setFont('helvetica', 'bold');
+    doc.text("Bill To:", 20, 50);
+    doc.setFont('helvetica', 'normal');
+    doc.text("Elastify Inc.", 20, 55);
+    doc.text("121 King Street West, Suite 1140", 20, 60);
+    doc.text("Toronto, ON M5H 3T9", 20, 65);
+
+    doc.autoTable({
+        startY: 90,
+        head: [
+            [
+                { content: 'DESCRIPTION', styles: { halign: 'left' } },
+                { content: 'AMOUNT', styles: { halign: 'right' } }
+            ]
+        ],
+        body: [
+            [
+                `SERVICES PROVIDED - ${formatDate(startDate)} - ${formatDate(endDate)}`,
+                `$ ${subtotal.toFixed(2)}`
+            ],
+            [
+                `$${rate.toFixed(2)} @ ${hours} hours`,
+                ``
+            ],
+            ['HST - @13%', `$ ${hst.toFixed(2)}`],
+            ['Total', `$ ${total.toFixed(2)}`]
+        ],
+        headStyles: { fillColor: [232, 248, 245] },
+        styles: {
+            textColor: [0, 0, 0],
+            lineWidth: 0.3,
+            lineColor: [173, 216, 230]
+        },
+        columnStyles: {
+            0: { cellWidth: 130, halign: 'left' },
+            1: { cellWidth: 60, halign: 'right' }
+        }
+    });
+
+    doc.setFont('helvetica', 'bold');
+    doc.text(
+        "THANK YOU FOR YOUR BUSINESS!",
+        105,
+        doc.autoTable.previous.finalY + 20,
+        { align: 'center' }
+    );
+
+    doc.save(`Invoice-${invoiceNumber}.pdf`);
+}
+</script>
+
+</body>
+</html>
