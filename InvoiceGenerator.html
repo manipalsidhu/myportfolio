@@ -57,6 +57,7 @@
         <select id="company" onchange="toggleWeek2Fields()">
             <option value="Trinity Aerospace Corp.">Trinity Aerospace Corp.</option>
             <option value="Programmable Control Systems Ltd.">Programmable Control Systems Ltd.</option>
+            <option value="GTEK MFG & TOOLS INC.">GTEK MFG & TOOLS INC.</option>
         </select>
     </div>
 
@@ -73,9 +74,16 @@
         <label for="date2">Service Date 2 (Week 1)</label>
         <input type="date" id="date2">
     </div>
-    <div class="form-group">
+
+    <div class="form-group" id="hours1Group">
         <label for="hours1">Total Hours (Week 1)</label>
         <input type="number" id="hours1" placeholder="Enter total hours">
+    </div>
+
+    <!-- GTEK Amount Field -->
+    <div class="form-group" id="amountGroup" style="display: none;">
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" placeholder="Enter amount">
     </div>
 
     <!-- Week 2 Fields -->
@@ -107,11 +115,26 @@
         return new Date(date).toLocaleDateString('en-US', options);
     }
 
-    // Hide/Show Week 2 fields
+    // Hide/Show Week 2 fields + GTEK amount field
     function toggleWeek2Fields() {
         const company = document.getElementById('company').value;
         const week2 = document.getElementById('week2Fields');
-        week2.style.display = company === "Programmable Control Systems Ltd." ? "none" : "block";
+        const hours1Group = document.getElementById('hours1Group');
+        const amountGroup = document.getElementById('amountGroup');
+
+        if (company === "Programmable Control Systems Ltd.") {
+            week2.style.display = "none";
+            hours1Group.style.display = "block";
+            amountGroup.style.display = "none";
+        } else if (company === "GTEK MFG & TOOLS INC.") {
+            week2.style.display = "none";
+            hours1Group.style.display = "none";
+            amountGroup.style.display = "block";
+        } else {
+            week2.style.display = "block";
+            hours1Group.style.display = "block";
+            amountGroup.style.display = "none";
+        }
     }
 
     function generateInvoice() {
@@ -120,20 +143,35 @@
         const date1 = document.getElementById('date1').value;
         const date2 = document.getElementById('date2').value;
         const hours1 = parseFloat(document.getElementById('hours1').value) || 0;
+        const customAmount = parseFloat(document.getElementById('amount').value) || 0;
 
         let date3 = "", date4 = "", hours2 = 0;
-        if (company !== "Programmable Control Systems Ltd.") {
+        if (company === "Trinity Aerospace Corp.") {
             date3 = document.getElementById('date3').value;
             date4 = document.getElementById('date4').value;
             hours2 = parseFloat(document.getElementById('hours2').value) || 0;
         }
 
         // Different hourly rate per company
-        const ratePerHour = company === "Programmable Control Systems Ltd." ? 35 : 32.5;
+        let ratePerHour = 0;
+        if (company === "Programmable Control Systems Ltd.") {
+            ratePerHour = 35;
+        } else if (company === "Trinity Aerospace Corp.") {
+            ratePerHour = 32.5;
+        }
 
-        const amount1 = hours1 * ratePerHour;
-        const amount2 = hours2 * ratePerHour;
-        const subtotal = amount1 + amount2;
+        let amount1 = 0;
+        let amount2 = 0;
+        let subtotal = 0;
+
+        if (company === "GTEK MFG & TOOLS INC.") {
+            subtotal = customAmount;
+        } else {
+            amount1 = hours1 * ratePerHour;
+            amount2 = hours2 * ratePerHour;
+            subtotal = amount1 + amount2;
+        }
+
         const hst = subtotal * 0.13;
         const total = subtotal + hst;
 
@@ -156,9 +194,9 @@
         doc.text("14893786 CANADA INC.", 20, 20);
         doc.setFont('helvetica', 'normal');
 
-        // ✅ Add HST line only for Programmable Control Systems Ltd.
+        // Add HST line for Programmable and GTEK
         let nextLineY = 25;
-        if (company === "Programmable Control Systems Ltd.") {
+        if (company === "Programmable Control Systems Ltd." || company === "GTEK MFG & TOOLS INC.") {
             doc.text("HST #: 762103216", 20, nextLineY);
             nextLineY += 5;
         }
@@ -173,16 +211,26 @@
         doc.text(company, 20, nextLineY + 25);
 
         // Table Body
-        const tableBody = [
-            [`SERVICES PROVIDED - ${date1} - ${date2}`, `$ ${amount1.toFixed(2)}`],
-            [`$${ratePerHour.toFixed(2)} @ ${hours1 + hours2} hours`, ``],
-            ['HST - @13%', `$ ${hst.toFixed(2)}`],
-            ['Total', `$ ${total.toFixed(2)}`]
-        ];
+        let tableBody = [];
 
-        // Add Week 2 line only for Trinity Aerospace
-        if (company === "Trinity Aerospace Corp.") {
-            tableBody.splice(1, 0, [`SERVICES PROVIDED - ${date3} - ${date4}`, `$ ${amount2.toFixed(2)}`]);
+        if (company === "GTEK MFG & TOOLS INC.") {
+            tableBody = [
+                [`SERVICES PROVIDED - ${date1} - ${date2}`, `$ ${subtotal.toFixed(2)}`],
+                ['HST - @13%', `$ ${hst.toFixed(2)}`],
+                ['Total', `$ ${total.toFixed(2)}`]
+            ];
+        } else {
+            tableBody = [
+                [`SERVICES PROVIDED - ${date1} - ${date2}`, `$ ${amount1.toFixed(2)}`],
+                [`$${ratePerHour.toFixed(2)} @ ${hours1 + hours2} hours`, ``],
+                ['HST - @13%', `$ ${hst.toFixed(2)}`],
+                ['Total', `$ ${total.toFixed(2)}`]
+            ];
+
+            // Add Week 2 line only for Trinity Aerospace
+            if (company === "Trinity Aerospace Corp.") {
+                tableBody.splice(1, 0, [`SERVICES PROVIDED - ${date3} - ${date4}`, `$ ${amount2.toFixed(2)}`]);
+            }
         }
 
         // Table
